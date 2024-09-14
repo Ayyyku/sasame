@@ -65,19 +65,19 @@
 </div>
 <script>
     function deleteData(id) {
-    fetch(`/delete-timer/${id}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.text())
-    .then(result => {
-        console.log(result);
-        location.reload();
-    })
-    .catch(error => console.error('Error:', error));
-}
+        fetch(`/delete-timer/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.text())
+        .then(result => {
+            console.log(result);
+            location.reload();
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
     document.addEventListener('DOMContentLoaded', function () {
         const rowsPerPage = 5;
@@ -109,15 +109,15 @@
                 const nomorMeja = String(item.timerId).replace(/\D/g, '');
                 const timeElapsedInMinutes = Math.floor(item.timeElapsed / 60);
                 row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${nomorMeja}</td>
-            <td>${timeElapsedInMinutes} Menit</td>
-            <td>${formatDate(item.date)}</td>
-            <td>${formatRupiah(item.price)}</td>
-            <td>
-                <button class="btn btn-danger" onclick="deleteData('${item.id}')">Delete</button>
-            </td>
-        `;
+                    <td>${index + 1}</td>
+                    <td>${nomorMeja}</td>
+                    <td>${timeElapsedInMinutes} Menit</td>
+                    <td>${formatDate(item.date)}</td>
+                    <td>${formatRupiah(item.price)}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteData('${item.id}')">Delete</button>
+                    </td>
+                `;
                 tableBody.appendChild(row);
             });
         }
@@ -191,35 +191,38 @@
                     Object.keys(data).forEach(date => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                    <td>${date}</td>
-                    <td>${formatRupiah(data[date])}</td>
-                `;
+                            <td>${date}</td>
+                            <td>${formatRupiah(data[date])}</td>
+                        `;
                         dailyIncomeTable.appendChild(row);
                     });
                 })
                 .catch(error => console.error('Error fetching daily income data:', error));
         }
 
-        renderDailyIncomeTable();
+        function fetchDataAndUpdate() {
+            fetch('/get-timer-data')
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Network response was not ok: ${response.status} - ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Fetched data:', data); // Logging for debugging
+                    timerData = data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by newest date
+                    goToPage(1);
+                    calculateDailyIncome(timerData);
+                    displayCurrentDay();
+                    renderDailyIncomeTable(timerData);
+                })
+                .catch(error => console.error('Error fetching timer data:', error));
+        }
 
-        fetch('/get-timer-data')
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`Network response was not ok: ${response.status} - ${text}`);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Fetched data:', data); // Logging for debugging
-                timerData = data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by newest date
-                goToPage(1);
-                calculateDailyIncome(timerData);
-                displayCurrentDay();
-                renderDailyIncomeTable(timerData);
-            })
-            .catch(error => console.error('Error fetching timer data:', error));
+        fetchDataAndUpdate();
+        setInterval(fetchDataAndUpdate, 10000);
     });
 </script>
 </body>
