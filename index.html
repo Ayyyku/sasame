@@ -32,7 +32,7 @@
                 <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/data">Data</a>
+                <a class="nav-link" href="/data" target="_blank">Data</a>
             </li>
         </ul>
     </div>
@@ -51,5 +51,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="timer.js"></script>
+<script>
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave? Changes you made may not be saved.';
+    });
+</script>
 </body>
 </html>
