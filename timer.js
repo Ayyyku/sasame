@@ -1,7 +1,6 @@
 const timersContainer = document.getElementById('timers');
 const timers = [];
 const prices = [];
-let imageUrl = "https://lh3.googleusercontent.com/fife/ALs6j_F0tCDxUt5s7088jfehbtphJk9tHwqtpN84k1Y80KF2wa68EVYPuuRYA7VFRZHavwxNVvqNs3DX_3FWtFku9uNdWyDqCZBwigJVyGrwqHuYFFRf3Tkb-sVHL73By7ueOBPbKMpDY6d0FfmveUDiPx9yGIsQBhVkXAtWthQff6Efw_sYrkZAF_tlguFCkQ4AZ_ZnSUS1sCvOmbfRcEbyPEbw2Tl1gLav65P8qBGz5jDLS7m7PVYDVs5V3xBa944pJ4bJ0iPJRAU2i7rXXBPoibhCwZRQmwg1vCVacNwYkpargBjmJm-gS1D8XjafceIV7F-FOBtGHjBTsB2eZl-TAP8RKIMZ23L-Eud_75Mm-JasigjlLW593620YwUUwUcuhKtaKhXJO_bVKKU7zcnbtRlaXXBb5lb9eGvxbWo5ux_QqsQDIZJrLlGGwJaP9zhiDwEEhOm99M_m1-XZH_j3w8qvsqToDyosLMvHFnShOGgHf8CjbUQVL2Mwr7yaVPxb4AEAQg2HrFWZE2Yiq8kdoa_S6zQaGpwtohivsdpBBWjVZqNvYMuNIy57svzGL-MDKk6uJXzuGNfqDOyon1KkDnS1H6JMfvG3stMzy4zjOGFo9-UGMa8TSa9Hw38Nn5OWv1ptmPYbUpcn9cftpPtCQY4fVzwvp6kSoMZudGYigYqVEil8lt4QwdFWPB2U7AXLAZvSNWzJsMVhQyft6_GLRnL3OzMbRvp1eassckypA8ztojjXKchRgrPLsz4FfEwau8l85OYuCLJJpgHS8CaoIM4nLMnhNz_qclvmBnhiiXM_8bJSHqLPlxlyX7r81G2eEXZYPAkT2AYNRrFL0_DC-55lJS00FRbSJkn1d0qUxkTdP9dbM0vIOWwsY1HFoGkOlarZ-DZteMaRfIiVLbrw7QihQEwUxtFUGWN2sDirXuvENuVpPiGdkRwUzznhLbznSJOrRhwXTR1iV5AEc3nI4G9yndChg-HQUuugC-ESYLaCt5PHEo9kEePOHZzajZ4SuULr6tB8CobwCixqqXZz6CFeQDi3Xi-Kw_QE8aEbpHjVWxXMsEIZiM02QhuWYsZDI9qvlGGeMyuLdc-0skramGoR7udOw6CBzficffEuMUSTdVlSwzQXYVuafDhrW1aAHXMBTdEko4EAKOQ2sfI43oDVjrUd73oTLZdko5T5bt8NheJJtFbQ0znEXK5LeL2nASfUrKIjKmLzs3fRskqfQoN_t2FUYsWq_Zy5fIcwE9PuGATP3WcUmNBOFiuUFIzDN2UE7S3EcNxZOMa1WftaMVal82-taYVe_jGPD6iDY7RAwc-LziyRhbup6VReypWwLGClczQNI3rdbaMg6ptjJjVT3gV53qv6IfVBb22hpJay_8xZMXBsIUH1rhwyvNfDkZGFJO4H8PhBTvAxFxgjUPb6nBskW3HsWTUKRHIy4_7GugEPg4W_FzpavsAb7l2eK1vtmjDnV_17YQCwpGI7vmFnAXJqasud6fD5nxeoI7q7JC9Ka9rts1vvxaHn7EMhDiHpiO3HKbkkMIStpPGR8ZoiOubBQz-F_PxGJCMXXheEcCcosuw3prHIC81KeuOKUsvt7Se9aN9e1Wg138F4HPfIzcDvQC7-ZNttqnpPcgSndB2vaSsI=w1920-h912";
 
 for (let i = 0; i < 9; i++) {
     const timerId = `timer${i}`;
@@ -24,7 +23,7 @@ for (let i = 0; i < 9; i++) {
         </div>
     `;
 
-    timers.push({seconds: 0, isRunning: false, interval: null});
+    timers.push({ seconds: 0, isRunning: false, interval: null });
     prices.push(defaultPrice);
 }
 
@@ -44,12 +43,23 @@ function saveTimerData(timerId, timeElapsed, price, date) {
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.error('Error:', error));
+        .then(response => {
+            if (!response.ok) {
+                console.error('Server error:', response.statusText);
+                return;
+            }
+            return response.text();
+        })
+        .then(result => {
+            if (result) {
+                console.log('Server response:', result);
+            }
+        })
+        .catch(error => console.error('Fetch error:', error));
 }
 
 function printTimerData(timerId, timeElapsed, date, price) {
+    let imageUrl = "logo.png";
     const nomorMeja = String(timerId).replace(/\D/g, '');
     const timeElapsedInMinutes = Math.floor(timeElapsed / 60);
     const formattedDate = new Date(date).toLocaleString('id-ID', {
@@ -61,7 +71,7 @@ function printTimerData(timerId, timeElapsed, date, price) {
         minute: '2-digit',
         second: '2-digit'
     });
-    const formattedPrice = new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(price);
+    const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
 
     const printContent = `
         <html lang="en">
@@ -79,15 +89,18 @@ function printTimerData(timerId, timeElapsed, date, price) {
               <h3>Terimakasih!!!</h3>
               <h3>Silahkan Datang Kembali</h3>
             </center>
-           
         </body>
         </html>
     `;
 
     const printWindow = window.open('', '', 'height=400,width=600');
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.print();
+    const img = new Image();
+    img.src = imageUrl;
+    img.onload = () => {
+        printWindow.document.write(printContent);
+        printWindow.print();
+        printWindow.document.close();
+    };
 }
 
 function formatTime(sec) {
