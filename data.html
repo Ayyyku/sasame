@@ -36,7 +36,6 @@
                     <th>Lama Bermain</th>
                     <th>Hari dan Waktu</th>
                     <th>Harga</th>
-                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody id="data-table">
@@ -114,9 +113,6 @@
                     <td>${timeElapsedInMinutes} Menit</td>
                     <td>${formatDate(item.date)}</td>
                     <td>${formatRupiah(item.price)}</td>
-                    <td>
-                        <button class="btn btn-danger" onclick="deleteData('${item.id}')">Delete</button>
-                    </td>
                 `;
                 tableBody.appendChild(row);
             });

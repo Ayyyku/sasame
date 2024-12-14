@@ -1,0 +1,86 @@
+[
+  {
+    "id": "_s9jfkrl22",
+    "timerId": 1,
+    "timeElapsed": 3,
+    "price": 0,
+    "date": "2024-12-12T05:52:14.896Z"
+  },
+  {
+    "id": "_0g2zjqgdz",
+    "timerId": 2,
+    "timeElapsed": 1,
+    "price": 0,
+    "date": "2024-12-13T05:52:11.674Z"
+  },
+  {
+    "id": "_szt4inqo9",
+    "timerId": 1,
+    "timeElapsed": 114,
+    "price": 1000,
+    "date": "2024-12-14T05:31:15.900Z"
+  },
+  {
+    "id": "_hl9vaoz8p",
+    "timerId": 1,
+    "timeElapsed": 4239,
+    "price": 24000,
+    "date": "2024-12-14T05:40:53.015Z"
+  },
+  {
+    "id": "_wr6va7b3o",
+    "timerId": 2,
+    "timeElapsed": 4251,
+    "price": 24000,
+    "date": "2024-12-14T05:41:02.281Z"
+  },
+  {
+    "id": "_gfredzup6",
+    "timerId": 3,
+    "timeElapsed": 4257,
+    "price": 24000,
+    "date": "2024-12-14T05:41:10.472Z"
+  },
+  {
+    "id": "_euspvqg6u",
+    "timerId": 4,
+    "timeElapsed": 4258,
+    "price": 24000,
+    "date": "2024-12-14T05:41:16.731Z"
+  },
+  {
+    "id": "_wsaw7zqu0",
+    "timerId": 5,
+    "timeElapsed": 4263,
+    "price": 30000,
+    "date": "2024-12-14T05:41:21.247Z"
+  },
+  {
+    "id": "_rez1csp36",
+    "timerId": 6,
+    "timeElapsed": 4267,
+    "price": 30000,
+    "date": "2024-12-14T05:41:23.737Z"
+  },
+  {
+    "id": "_o4yngfpx4",
+    "timerId": 7,
+    "timeElapsed": 4265,
+    "price": 30000,
+    "date": "2024-12-14T05:41:26.186Z"
+  },
+  {
+    "id": "_8o2szp0oh",
+    "timerId": 8,
+    "timeElapsed": 4269,
+    "price": 30000,
+    "date": "2024-12-14T05:41:28.803Z"
+  },
+  {
+    "id": "_84kbbtyuc",
+    "timerId": 9,
+    "timeElapsed": 4274,
+    "price": 30000,
+    "date": "2024-12-14T05:41:33.125Z"
+  }
+]

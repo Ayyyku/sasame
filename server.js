@@ -32,7 +32,7 @@ app.get('/get-timer-data', (req, res) => {
             return res.status(500).send('Error reading data');
         }
         try {
-            const jsonData = JSON.parse(fileData || '[]');
+            const jsonData = fileData ? JSON.parse(fileData) : [];
             res.json(jsonData);
         } catch (parseError) {
             console.error('Error parsing JSON:', parseError);
