@@ -82,5 +82,117 @@
     "timeElapsed": 4274,
     "price": 30000,
     "date": "2024-12-14T05:41:33.125Z"
+  },
+  {
+    "id": "_f8ckwwfwa",
+    "timerId": 1,
+    "timeElapsed": 90,
+    "price": 1000,
+    "date": "2024-12-14T13:00:10.395Z"
+  },
+  {
+    "id": "_9jyq6n1yc",
+    "timerId": 2,
+    "timeElapsed": 121,
+    "price": 1000,
+    "date": "2024-12-14T07:52:32.378Z"
+  },
+  {
+    "id": "_wm714rbb8",
+    "timerId": 1,
+    "timeElapsed": 99,
+    "price": 1000,
+    "date": "2024-12-14T07:54:42.090Z"
+  },
+  {
+    "id": "_wp8jki1qz",
+    "timerId": 3,
+    "timeElapsed": 2,
+    "price": 0,
+    "date": "2024-12-14T07:57:21.390Z"
+  },
+  {
+    "id": "_szu9m9160",
+    "timerId": 1,
+    "timeElapsed": 48,
+    "price": 0,
+    "date": "2024-12-14T12:58:57.585Z"
+  },
+  {
+    "id": "_wbost2vop",
+    "timerId": 2,
+    "timeElapsed": 71,
+    "price": 0,
+    "date": "2024-12-14T12:59:22.667Z"
+  },
+  {
+    "id": "_b58parywg",
+    "timerId": 3,
+    "timeElapsed": 80,
+    "price": 1000,
+    "date": "2024-12-14T12:59:33.506Z"
+  },
+  {
+    "id": "_jnkpazvf8",
+    "timerId": 1,
+    "timeElapsed": 8,
+    "price": 0,
+    "date": "2024-12-14T13:00:34.610Z"
+  },
+  {
+    "id": "_w6egkv6bw",
+    "timerId": 2,
+    "timeElapsed": 21,
+    "price": 0,
+    "date": "2024-12-14T13:00:51.221Z"
+  },
+  {
+    "id": "_owfbnrs2o",
+    "timerId": 9,
+    "timeElapsed": 65,
+    "price": 0,
+    "date": "2024-12-14T13:03:01.899Z"
+  },
+  {
+    "id": "_1ziij52zh",
+    "timerId": 8,
+    "timeElapsed": 71,
+    "price": 0,
+    "date": "2024-12-14T13:03:09.121Z"
+  },
+  {
+    "id": "_l4bonr4vq",
+    "timerId": 7,
+    "timeElapsed": 82,
+    "price": 1000,
+    "date": "2024-12-14T13:03:20.367Z"
+  },
+  {
+    "id": "_58pltmxz8",
+    "timerId": 2,
+    "timeElapsed": 3,
+    "price": 0,
+    "date": "2024-12-14T13:06:30.359Z"
+  },
+  {
+    "id": "_9yxv20kag",
+    "timerId": 1,
+    "timeElapsed": 373,
+    "price": 3000,
+    "date": "2024-12-14T13:47:40.580Z"
+  },
+  {
+    "id": "_9yadncd9b",
+    "timerId": 2,
+    "timeElapsed": 373,
+    "price": 3000,
+    "date": "2024-12-14T13:47:46.141Z"
+  },
+  {
+    "id": "_gahrdufnl",
+    "timerId": 3,
+    "timeElapsed": 388,
+    "price": 3000,
+    "date": "2024-12-14T13:48:03.261Z"
   }
 ]

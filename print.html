@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print Rekap Harian</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5 pt-5">
+    <h1 class="mb-5">Print Rekap Harian</h1>
+    <div class="form-group">
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date" class="form-control"/>
+    </div>
+    <button id="print-button" class="btn btn-primary mb-3">Print</button>
+    <button id="back-button" class="btn btn-secondary mb-3">
+        <a href="/data" class="text-white">Back</a>
+    </button>
+    <table class="table table-bordered" id="rekap-harian-table">
+        <thead>
+        <tr>
+            <th>Hari/Tanggal</th>
+            <th>Total Pemasukan</th>
+        </tr>
+        </thead>
+        <tbody id="daily-income-table">
+        </tbody>
+    </table>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Remove the selectDateInput reference
+        // const selectDateInput = document.getElementById('select-date');
+        const dailyIncomeTable = document.getElementById('daily-income-table');
+        const printButton = document.getElementById('print-button');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+        const backButton = document.getElementById('back-button');
+
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'}).format(amount);
+        }
+
+        function fetchDailyIncome(startDate, endDate) {
+            fetch(`/get-daily-income?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    dailyIncomeTable.innerHTML = '';
+                    if (Object.keys(data).length > 0) {
+                        for (const [date, income] of Object.entries(data)) {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${date}</td>
+                                <td>${formatRupiah(income)}</td>
+                            `;
+                            dailyIncomeTable.appendChild(row);
+                        }
+                    } else {
+                        dailyIncomeTable.innerHTML = '<tr><td colspan="2">No data available for selected date range.</td></tr>';
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function handleDateChange() {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            if (startDate && endDate) {
+                fetchDailyIncome(startDate, endDate);
+            }
+        }
+
+        startDateInput.addEventListener('change', handleDateChange);
+        endDateInput.addEventListener('change', handleDateChange);
+
+        // Remove the selectDateInput event listener
+        // selectDateInput.addEventListener('change', function () {
+        //     const selectedDate = this.value;
+        //     if (selectedDate) {
+        //         fetchDailyIncome(selectedDate, selectedDate);
+        //     }
+        // });
+
+        printButton.addEventListener('click', function () {
+            window.print();
+        });
+
+        // Remove the backButton event listener
+        // backButton.addEventListener('click', function() {
+        //     window.history.back();
+        // });
+    });
+</script>
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #rekap-harian-table, #rekap-harian-table *,
+        #daily-income-table, #daily-income-table * {
+            visibility: visible;
+        }
+        #rekap-harian-table {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+</style>
+</body>
+</html>

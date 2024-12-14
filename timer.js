@@ -5,7 +5,6 @@ let imageUrl = "https://lh3.googleusercontent.com/fife/ALs6j_F0tCDxUt5s7088jfehb
 
 for (let i = 0; i < 9; i++) {
     const timerId = `timer${i}`;
-    const priceId = `price${i}`;
     const billingId = `billing${i}`;
     const cardId = `card${i}`;
     const defaultPrice = i < 4 ? 20000 : 25000;
@@ -16,7 +15,6 @@ for (let i = 0; i < 9; i++) {
                 <div class="card-body">
                     <h5 class="card-title">Meja ${i + 1}</h5>
                     <h6 class="card-subtitle mb-2 text-muted timer-text" id="${timerId}">00:00:00</h6>
-                    <input type="number" id="${priceId}" class="form-control mb-2" placeholder="Price per hour" value="${defaultPrice}">
                     <h6 class="card-subtitle mt-2">Billing: Rp. <span id="${billingId}">0.00</span></h6>
                     <button class="btn btn-primary m-1" onclick="startTimer(${i})">Start</button>
                     <button class="btn btn-danger m-1" onclick="stopTimer(${i})">Stop</button>
@@ -99,9 +97,18 @@ function formatTime(sec) {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
+function getCurrentPricePerHour() {
+    const currentHour = new Date().getHours();
+    if (currentHour >= 10 && currentHour < 17) {
+        return 20000;
+    } else {
+        return 25000;
+    }
+}
+
 function updateTimer(index) {
     document.getElementById(`timer${index}`).textContent = formatTime(timers[index].seconds);
-    const pricePerHour = parseFloat(document.getElementById(`price${index}`).value);
+    const pricePerHour = getCurrentPricePerHour();
     const billingAmount = (timers[index].seconds / 3600) * pricePerHour;
     document.getElementById(`billing${index}`).textContent = billingAmount.toFixed(2);
 }
@@ -136,7 +143,7 @@ function stopTimer(index) {
 
         const timerId = index + 1;
         const timeElapsed = timers[index].seconds;
-        const pricePerHour = parseFloat(document.getElementById(`price${index}`).value);
+        const pricePerHour = getCurrentPricePerHour();
         let price = (timeElapsed / 3600) * pricePerHour;
         const date = new Date().toISOString();
 
