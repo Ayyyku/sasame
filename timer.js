@@ -23,7 +23,7 @@ for (let i = 0; i < 9; i++) {
         </div>
     `;
 
-    timers.push({ seconds: 0, isRunning: false, interval: null });
+    timers.push({ seconds: 0, isRunning: false, interval: null, startTime: null });
     prices.push(defaultPrice);
 }
 
@@ -32,8 +32,8 @@ function generateUniqueId() {
 }
 
 function saveTimerData(timerId, timeElapsed, price, date) {
-    const id = generateUniqueId(); // Generate a unique ID
-    const data = { id, timerId, timeElapsed, price, date }; // Include the ID in the data
+    const id = generateUniqueId();
+    const data = { id, timerId, timeElapsed, price, date };
     console.log('Saving timer data:', data);
 
     fetch('/save-timer', {
@@ -74,7 +74,19 @@ function printTimerData(timerId, timeElapsed, date, price) {
     const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
 
     const printContent = `
+        <!DOCTYPE html>
         <html lang="en">
+        <head>
+            <title>Receipt</title>
+            <style>
+                /* Add any styles for the receipt here */
+            </style>
+            <script>
+                window.onload = function() {
+                    window.print();
+                };
+            </script>
+        </head>
         <body>
             <center><img src="${imageUrl}" alt="" width="96" height="96"></center>
             <div class="currentDate">${formattedDate}</div>
@@ -94,13 +106,9 @@ function printTimerData(timerId, timeElapsed, date, price) {
     `;
 
     const printWindow = window.open('', '', 'height=400,width=600');
-    const img = new Image();
-    img.src = imageUrl;
-    img.onload = () => {
-        printWindow.document.write(printContent);
-        printWindow.print();
-        printWindow.document.close();
-    };
+    printWindow.document.open();
+    printWindow.document.write(printContent);
+    printWindow.document.close();
 }
 
 function formatTime(sec) {
@@ -129,6 +137,7 @@ function updateTimer(index) {
 function startTimer(index) {
     if (!timers[index].isRunning) {
         timers[index].isRunning = true;
+        timers[index].startTime = new Date(); // Record the start time
         document.getElementById(`card${index}`).classList.remove('timer-inactive');
         document.getElementById(`card${index}`).classList.add('timer-active');
         timers[index].interval = setInterval(() => {
@@ -147,6 +156,30 @@ function roundToNearestThousand(amount) {
     }
 }
 
+function getPriceBetween(startTime, endTime) {
+    const rateChangeTime = new Date(startTime);
+    rateChangeTime.setHours(17, 0, 0, 0); // Set time to 17:00 WIB
+
+    let totalPrice = 0;
+
+    if (endTime <= rateChangeTime) {
+        // Entire duration is before rate change
+        const durationInHours = (endTime - startTime) / 3600000;
+        totalPrice = durationInHours * 20000;
+    } else if (startTime >= rateChangeTime) {
+        // Entire duration is after rate change
+        const durationInHours = (endTime - startTime) / 3600000;
+        totalPrice = durationInHours * 25000;
+    } else {
+        // Duration spans before and after rate change
+        const durationBefore = (rateChangeTime - startTime) / 3600000;
+        const durationAfter = (endTime - rateChangeTime) / 3600000;
+        totalPrice = (durationBefore * 20000) + (durationAfter * 25000);
+    }
+
+    return totalPrice;
+}
+
 function stopTimer(index) {
     if (timers[index].isRunning) {
         timers[index].isRunning = false;
@@ -156,11 +189,13 @@ function stopTimer(index) {
 
         const timerId = index + 1;
         const timeElapsed = timers[index].seconds;
-        const pricePerHour = getCurrentPricePerHour();
-        let price = (timeElapsed / 3600) * pricePerHour;
-        const date = new Date().toISOString();
+        const startTime = timers[index].startTime;
+        const endTime = new Date();
+        const date = endTime.toISOString();
 
-        const currentHour = new Date().getHours();
+        let price = getPriceBetween(startTime, endTime);
+
+        const currentHour = endTime.getHours();
         if (currentHour >= 23 || currentHour < 4) {
             price += 5000;
         }

@@ -4,7 +4,8 @@
   "main": "timer.js",
   "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
