@@ -1,5 +1,5 @@
 node_modules
 css
 js
-dailyIncome.json
-timeData.json
+./dailyIncome.json
+./timeData.json
