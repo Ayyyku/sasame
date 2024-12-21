@@ -59,7 +59,9 @@ function saveTimerData(timerId, timeElapsed, price, date) {
 }
 
 function printTimerData(timerId, timeElapsed, date, price) {
-    let imageUrl = "logo.png";
+    let imageUrl = "https://i.imgur.com/OAKJlQi.png";
+    imageUrl += `?timestamp=${new Date().getTime()}`;
+    const fallbackImageUrl = "https://via.placeholder.com/96";
     const nomorMeja = String(timerId).replace(/\D/g, '');
     const timeElapsedInMinutes = Math.floor(timeElapsed / 60);
     const formattedDate = new Date(date).toLocaleString('id-ID', {
@@ -79,7 +81,7 @@ function printTimerData(timerId, timeElapsed, date, price) {
         <head>
             <title>Receipt</title>
             <style>
-                /* Add any styles for the receipt here */
+               
             </style>
             <script>
                 window.onload = function() {
@@ -88,7 +90,7 @@ function printTimerData(timerId, timeElapsed, date, price) {
             </script>
         </head>
         <body>
-            <center><img src="${imageUrl}" alt="" width="96" height="96"></center>
+            <center><img src="${imageUrl}" alt="" width="96" height="96" onerror="this.onerror=null;this.src='${imageUrl}';"></center>
             <div class="currentDate">${formattedDate}</div>
             <hr>
             <div class="receipt">
@@ -121,9 +123,9 @@ function formatTime(sec) {
 function getCurrentPricePerHour() {
     const currentHour = new Date().getHours();
     if (currentHour >= 10 && currentHour < 17) {
-        return 20000;
+        return 15000;
     } else {
-        return 25000;
+        return 20000;
     }
 }
 
@@ -137,7 +139,7 @@ function updateTimer(index) {
 function startTimer(index) {
     if (!timers[index].isRunning) {
         timers[index].isRunning = true;
-        timers[index].startTime = new Date(); // Record the start time
+        timers[index].startTime = new Date(); 
         document.getElementById(`card${index}`).classList.remove('timer-inactive');
         document.getElementById(`card${index}`).classList.add('timer-active');
         timers[index].interval = setInterval(() => {
@@ -157,24 +159,32 @@ function roundToNearestThousand(amount) {
 }
 
 function getPriceBetween(startTime, endTime) {
-    const rateChangeTime = new Date(startTime);
-    rateChangeTime.setHours(17, 0, 0, 0); // Set time to 17:00 WIB
-
+    const rateBefore = 15000; 
+    const rateAfter = 20000;  
     let totalPrice = 0;
+    let currentTime = new Date(startTime);
 
-    if (endTime <= rateChangeTime) {
-        // Entire duration is before rate change
-        const durationInHours = (endTime - startTime) / 3600000;
-        totalPrice = durationInHours * 20000;
-    } else if (startTime >= rateChangeTime) {
-        // Entire duration is after rate change
-        const durationInHours = (endTime - startTime) / 3600000;
-        totalPrice = durationInHours * 25000;
-    } else {
-        // Duration spans before and after rate change
-        const durationBefore = (rateChangeTime - startTime) / 3600000;
-        const durationAfter = (endTime - rateChangeTime) / 3600000;
-        totalPrice = (durationBefore * 20000) + (durationAfter * 25000);
+    while (currentTime < endTime) {
+        let rateChangeTime = new Date(currentTime);
+        rateChangeTime.setHours(17, 0, 0, 0);
+
+        let nextPeriodEnd;
+        let currentRate;
+
+        if (currentTime < rateChangeTime) {
+            currentRate = rateBefore;
+            nextPeriodEnd = rateChangeTime < endTime ? rateChangeTime : endTime;
+        } else {
+            currentRate = rateAfter;
+            let nextRateChangeTime = new Date(rateChangeTime);
+            nextRateChangeTime.setDate(nextRateChangeTime.getDate() + 1);
+            nextPeriodEnd = nextRateChangeTime < endTime ? nextRateChangeTime : endTime;
+        }
+
+        let durationInHours = (nextPeriodEnd - currentTime) / 3600000;
+        totalPrice += durationInHours * currentRate;
+
+        currentTime = nextPeriodEnd;
     }
 
     return totalPrice;
@@ -200,10 +210,10 @@ function stopTimer(index) {
             price += 5000;
         }
 
-        price = roundToNearestThousand(price); // Apply rounding before saving
+        price = roundToNearestThousand(price); 
 
         saveTimerData(timerId, timeElapsed, price, date);
-        printTimerData(timerId, timeElapsed, date, price); // Call the print function
+        printTimerData(timerId, timeElapsed, date, price); 
     }
 }
 
