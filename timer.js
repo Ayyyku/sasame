@@ -1,12 +1,10 @@
 const timersContainer = document.getElementById('timers');
 const timers = [];
-const prices = [];
 
 for (let i = 0; i < 9; i++) {
     const timerId = `timer${i}`;
     const billingId = `billing${i}`;
     const cardId = `card${i}`;
-    const defaultPrice = i < 4 ? 20000 : 25000;
 
     timersContainer.innerHTML += `
         <div class="col-md-4 mb-4">
@@ -24,7 +22,6 @@ for (let i = 0; i < 9; i++) {
     `;
 
     timers.push({ seconds: 0, isRunning: false, interval: null, startTime: null });
-    prices.push(defaultPrice);
 }
 
 function generateUniqueId() {
@@ -204,11 +201,6 @@ function stopTimer(index) {
         const date = endTime.toISOString();
 
         let price = getPriceBetween(startTime, endTime);
-
-        const currentHour = endTime.getHours();
-        if (currentHour >= 23 || currentHour < 4) {
-            price += 5000;
-        }
 
         price = roundToNearestThousand(price); 
 
