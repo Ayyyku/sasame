@@ -13,8 +13,7 @@ const __dirname = dirname(__filename);
 app.use(express.json());
 
 // Serve static files
-// app.use(express.static(path.join(__dirname, "js")));
-app.use(express.static(path.join(__dirname, "json")));
+app.use(express.static(path.join(__dirname)));
 
 
 
