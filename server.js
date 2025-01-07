@@ -13,7 +13,10 @@ const __dirname = dirname(__filename);
 app.use(express.json());
 
 // Serve static files
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, "js")));
+app.use(express.static(path.join(__dirname, "json")));
+
+
 
 // Serve the index.html file
 app.get('/', (req, res) => {
