@@ -92,7 +92,7 @@ function printTimerData(timerId, timeElapsed, date, price) {
             <hr>
             <div class="receipt">
               <div><span class="label">Nomor Meja:</span> <span>${nomorMeja}</span></div>
-              <div><span class="label">Waktu:</span> <span>${timeElapsedInMinutes}</span></div>
+              <div><span class="label">Waktu:</span> <span>${timeElapsedInMinutes} Menit</span></div>
               <div><span class="label">Harga:</span> <span>Rp. ${formattedPrice}</span></div>
             </div>
             <hr>
@@ -119,6 +119,7 @@ function formatTime(sec) {
 
 function getCurrentPricePerHour() {
     const currentHour = new Date().getHours();
+    console.log(currentHour);
     if (currentHour >= 10 && currentHour < 17) {
         return 15000;
     } else {
@@ -160,27 +161,44 @@ function getPriceBetween(startTime, endTime) {
     const rateAfter = 20000;  
     let totalPrice = 0;
     let currentTime = new Date(startTime);
+    let endDateTime = new Date(endTime);
 
-    while (currentTime < endTime) {
-        let rateChangeTime = new Date(currentTime);
-        rateChangeTime.setHours(17, 0, 0, 0);
+    // If endTime is earlier in the day than startTime, add one day to endTime
+    if (endDateTime <= currentTime) {
+        endDateTime.setDate(endDateTime.getDate() + 1);
+    }
 
+    while (currentTime < endDateTime) {
         let nextPeriodEnd;
         let currentRate;
 
-        if (currentTime < rateChangeTime) {
-            currentRate = rateBefore;
-            nextPeriodEnd = rateChangeTime < endTime ? rateChangeTime : endTime;
-        } else {
+        // Determine the current rate and the end of the current period
+        if (currentTime.getHours() >= 17 || currentTime.getHours() < 2) {
             currentRate = rateAfter;
-            let nextRateChangeTime = new Date(rateChangeTime);
-            nextRateChangeTime.setDate(nextRateChangeTime.getDate() + 1);
-            nextPeriodEnd = nextRateChangeTime < endTime ? nextRateChangeTime : endTime;
+            nextPeriodEnd = new Date(currentTime);
+            nextPeriodEnd.setHours(2, 0, 0, 0);
+            if (nextPeriodEnd <= currentTime) {
+                nextPeriodEnd.setDate(nextPeriodEnd.getDate() + 1);
+            }
+        } else {
+            currentRate = rateBefore;
+            nextPeriodEnd = new Date(currentTime);
+            nextPeriodEnd.setHours(17, 0, 0, 0);
+            if (nextPeriodEnd <= currentTime) {
+                nextPeriodEnd.setDate(nextPeriodEnd.getDate() + 1);
+            }
         }
 
+        // Ensure nextPeriodEnd does not exceed endDateTime
+        if (nextPeriodEnd > endDateTime) {
+            nextPeriodEnd = endDateTime;
+        }
+
+        // Calculate the duration in hours and add to total price
         let durationInHours = (nextPeriodEnd - currentTime) / 3600000;
         totalPrice += durationInHours * currentRate;
 
+        // Move to the next period
         currentTime = nextPeriodEnd;
     }
 
@@ -217,3 +235,17 @@ function resetTimer(index) {
         document.getElementById(`card${index}`).classList.add('timer-inactive');
     }
 }
+
+function updateCurrentTime() {
+    const currentTimeElement = document.querySelector('.time');
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    currentTimeElement.textContent = formattedTime;
+}
+
+updateCurrentTime();
+setInterval(updateCurrentTime, 1000);
